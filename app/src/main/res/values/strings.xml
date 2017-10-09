@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CarDroid</string>
+
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="server_on">Server is on.</string>
+    <string name="server_off">Server is off.</string>
+</resources>

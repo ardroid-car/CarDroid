@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_overlay"
+    tools:context="rogne.ntnu.no.cardroid.AltControlActivity"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
+
+    <TextView
+        android:id="@+id/ServerLog2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:rotation="0"
+        android:scrollbars="vertical"
+        android:text="Console Log"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="415dp"
+        tools:layout_conversion_absoluteWidth="360dp"
+        tools:layout_conversion_absoluteX="0dp"
+        tools:layout_conversion_absoluteY="96dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/TurnText"
+        app:layout_constraintRight_toLeftOf="@+id/SpeedText"
+        android:layout_marginRight="8dp" />
+
+    <SeekBar
+        android:id="@+id/seekBar2"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:max="510"
+        android:min="0"
+        android:progress="0"
+        android:rotation="0"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <SeekBar
+        android:id="@+id/seekBar3"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:max="510"
+        android:min="0"
+        android:progress="0"
+        android:rotation="270"
+        app:layout_constraintLeft_toLeftOf="@+id/SpeedText"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/SpeedText"
+        android:layout_marginTop="96dp"
+        app:layout_constraintTop_toBottomOf="@+id/SpeedText" />
+
+    <TextView
+        android:id="@+id/TurnText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not turning"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/seekBar2"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/seekBar2"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar2" />
+
+    <TextView
+        android:id="@+id/SpeedText"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:rotation="0"
+        android:text="No Speed"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>
