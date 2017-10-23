@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.SurfaceView;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -26,7 +27,7 @@ public class CamDisplayActivity extends AppCompatActivity {
             protected Void doInBackground(Integer... integers) {
                 socket = new Socket();
                 try {
-                    socket.connect(new InetSocketAddress("192.168.0.102", 6672));
+                    socket.connect(new InetSocketAddress("192.168.0.125", 6672));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -34,6 +35,7 @@ public class CamDisplayActivity extends AppCompatActivity {
                 MediaPlayer mMediaPlayer = new MediaPlayer();
                 try {
                     mMediaPlayer.setDataSource(pfd.getFileDescriptor());
+                    mMediaPlayer.setDisplay(((SurfaceView) findViewById(R.id.display)).getHolder());
                     mMediaPlayer.prepare();
                 } catch (IOException e) {
                     e.printStackTrace();

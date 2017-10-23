@@ -2,8 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rogne.ntnu.no.cardroid">
 
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="21" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature android:name="android.hardware.camera2.full" />
+    <uses-feature android:name="android.hardware.location.gps" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -26,7 +41,9 @@
         </activity>
         <activity android:name=".CamActivity" />
         <activity android:name=".CamDisplayActivity" />
-        <activity android:name=".AltControlActivity"></activity>
+        <activity android:name=".AltControlActivity" />
+        <activity android:name=".CamOldActivity" />
+        <activity android:name=".CopyCamActivity"></activity>
     </application>
 
 </manifest>

@@ -86,11 +86,6 @@ public class Server implements Runnable {
                 line = in.readLine();
                 if(line != null){
                 printToView(line);
-                } else if(!conn.isConnected()){
-                    printToView("Connection to device lost");
-                    listenForConnection();
-                } else if(line == null){
-                    System.out.println(line);
                 }
             }
 

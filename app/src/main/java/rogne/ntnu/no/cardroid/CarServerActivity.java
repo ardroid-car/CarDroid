@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -57,7 +55,7 @@ public class CarServerActivity extends AppCompatActivity {
     }
 
     public void camTestSend(View view){
-        Intent intent = new Intent(this, CamActivity.class);
+        Intent intent = new Intent(this, CopyCamActivity.class);
         startActivity(intent);
     }
     public void camTestRecieve(View view){
@@ -96,6 +94,7 @@ public class CarServerActivity extends AppCompatActivity {
 
     public void sendCommand(String cmd){
         carServer.send(cmd);
+        phoneServer.send(cmd);
     }
 
     private void buttonListeners() {
