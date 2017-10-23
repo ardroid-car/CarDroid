@@ -78,6 +78,7 @@ public class CamActivity extends AppCompatActivity {
         textureView.setSurfaceTextureListener(textureListener);
         takePictureButton = (Button) findViewById(R.id.picButton);
         assert takePictureButton != null;
+        socket = getConnection();
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +171,6 @@ public class CamActivity extends AppCompatActivity {
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
             // Orientation
-            socket = getConnection();
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
             final File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
@@ -204,6 +204,7 @@ public class CamActivity extends AppCompatActivity {
                     } finally {
                         if (null != output) {
                             output.close();
+                            pdf.close();
                         }
                     }
                 }

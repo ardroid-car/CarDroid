@@ -55,7 +55,7 @@ public class CarServerActivity extends AppCompatActivity {
     }
 
     public void camTestSend(View view){
-        Intent intent = new Intent(this, CopyCamActivity.class);
+        Intent intent = new Intent(this, CamActivity.class);
         startActivity(intent);
     }
     public void camTestRecieve(View view){

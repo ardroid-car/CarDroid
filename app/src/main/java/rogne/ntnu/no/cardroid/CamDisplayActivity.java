@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.view.SurfaceView;
 import android.widget.ImageView;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -33,15 +35,8 @@ public class CamDisplayActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 ParcelFileDescriptor pfd = ParcelFileDescriptor.fromSocket(socket);
-                MediaPlayer mMediaPlayer = new MediaPlayer();
-                try {
-                    mMediaPlayer.setDataSource(pfd.getFileDescriptor());
-                    mMediaPlayer.setDisplay(((SurfaceView) findViewById(R.id.display)).getHolder());
-                    mMediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                mMediaPlayer.start();
+                InputStream is = new FileInputStream(pfd.getFileDescriptor());
+
                 return null;
             }
         }
