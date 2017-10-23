@@ -21,7 +21,9 @@ public class CarServerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_server);
         carServer = new Server(((TextView) findViewById(R.id.ServerLog)), 6670);
+        carServer.setHandler(carServer.new CarHandler());
         phoneServer = new Server(((TextView) findViewById(R.id.ServerLog)), 6671);
+        phoneServer.setHandler(carServer.new PhoneHandler());
         buttonListeners();
         SeekBar s = (SeekBar) findViewById(R.id.seekBar);
         s.setProgress(255);

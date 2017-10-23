@@ -25,9 +25,11 @@ public class Server implements Runnable {
     private boolean stop = false;
     private TextView log;
     PrintStream out;
-    public Server(TextView log, int port, Handler handler){
+    public Server(TextView log, int port){
         this.port = port;
         this.log = log;
+    }
+    public void setHandler(Handler handler){
         this.handler = handler;
     }
     @Override
@@ -130,7 +132,6 @@ public class Server implements Runnable {
     public class CarHandler implements rogne.ntnu.no.cardroid.Server.Server.Handler {
         public CarHandler()
         {
-
         }
 
         public void handle(Socket conn){
