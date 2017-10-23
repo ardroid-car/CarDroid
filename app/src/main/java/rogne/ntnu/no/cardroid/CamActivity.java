@@ -9,9 +9,11 @@ import android.hardware.camera2.*;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +25,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -36,6 +39,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class CamActivity extends AppCompatActivity {
     ServerSocket welcome = null;
@@ -166,6 +170,7 @@ public class CamActivity extends AppCompatActivity {
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
             // Orientation
+            socket = getConnection();
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
             final File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
@@ -191,8 +196,10 @@ public class CamActivity extends AppCompatActivity {
                 }
                 private void save(byte[] bytes) throws IOException {
                     OutputStream output = null;
+                    ParcelFileDescriptor pdf = null;
                     try {
-                        output = new FileOutputStream(file);
+                        pdf = ParcelFileDescriptor.fromSocket(socket);
+                        output = new FileOutputStream(pdf.getFileDescriptor());
                         output.write(bytes);
                     } finally {
                         if (null != output) {
@@ -323,6 +330,39 @@ public class CamActivity extends AppCompatActivity {
         //closeCamera();
         stopBackgroundThread();
         super.onPause();
+    }
+    private Socket getConnection() {
+        class CameraSocket extends AsyncTask<Integer, Integer, Socket> {
+            @Override
+            protected Socket doInBackground(Integer... ints) {
+                Socket socket = null;
+                try
+
+                {
+                    ServerSocket serverSocket = new ServerSocket(ints[0]);
+                    socket = serverSocket.accept();
+                } catch (
+                        IOException e)
+
+                {
+                    e.printStackTrace();
+                }
+                return socket;
+            }
+        }
+        CameraSocket cs = new CameraSocket();
+        cs.execute(6672);
+        Socket s = null;
+        try {
+            while (s == null) {
+                s = cs.get();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return s;
     }
 }
 
