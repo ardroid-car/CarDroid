@@ -44,6 +44,7 @@ import java.util.concurrent.ExecutionException;
 public class CamActivity extends AppCompatActivity {
     ServerSocket welcome = null;
     Socket socket = null;
+    ParcelFileDescriptor pdf = null;
     private final int BACK_CAM = 0;
     private final int FRONT_CAM = 1;
     private final int CAM_TO_USE = BACK_CAM;
@@ -79,6 +80,7 @@ public class CamActivity extends AppCompatActivity {
         takePictureButton = (Button) findViewById(R.id.picButton);
         assert takePictureButton != null;
         socket = getConnection();
+        pdf = ParcelFileDescriptor.fromSocket(socket);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,15 +198,12 @@ public class CamActivity extends AppCompatActivity {
                 }
                 private void save(byte[] bytes) throws IOException {
                     OutputStream output = null;
-                    ParcelFileDescriptor pdf = null;
                     try {
-                        pdf = ParcelFileDescriptor.fromSocket(socket);
                         output = new FileOutputStream(pdf.getFileDescriptor());
                         output.write(bytes);
                     } finally {
                         if (null != output) {
                             output.close();
-                            pdf.close();
                         }
                     }
                 }
