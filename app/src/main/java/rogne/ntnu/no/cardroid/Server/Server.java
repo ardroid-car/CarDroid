@@ -8,21 +8,27 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Handler;
 
 /**
  * Created by Kristoffer on 2017-09-28.
  */
 
 public class Server implements Runnable {
+    private interface Handler{
+        void handle(Socket conn);
+    }
+    private Handler handler;
     private ServerSocket serverSocket = null;
     private int port;
     private boolean running = false;
     private boolean stop = false;
     private TextView log;
     PrintStream out;
-    public Server(TextView log, int port){
+    public Server(TextView log, int port, Handler handler){
         this.port = port;
         this.log = log;
+        this.handler = handler;
     }
     @Override
     public void run() {
@@ -65,42 +71,12 @@ public class Server implements Runnable {
         try {
             conn = serverSocket.accept();
             printToView("Connection recived from " + conn.getInetAddress().getHostName() + " : " + conn.getPort());
-            handle(conn);
+            handler.handle(conn);
         } catch (IOException ex) {
             printToView("Could not accept connection. Reason: " + ex.getMessage());
         }
     }
 
-    private void handle(Socket conn) {
-        String line , input = "";
-
-        try
-        {
-            //get socket writing and reading streams
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            out = new PrintStream(conn.getOutputStream());
-            //Now start reading input from client
-            running = true;
-            while(running)
-            {
-                line = in.readLine();
-                if(line != null){
-                printToView(line);
-                }
-            }
-
-            out.println("Server shutting down");
-            printToView("Server shutting down");
-            //client disconnected, so close socket
-            conn.close();
-        }
-
-        catch (IOException e)
-        {
-            System.out.println("IOException on socket : " + e);
-            e.printStackTrace();
-        }
-    }
 
     private void printToView(final String line) {
         System.out.println(line);
@@ -117,5 +93,69 @@ public class Server implements Runnable {
             out.println("[" + line +"]");
         }
         return out != null;
+    }
+    public class PhoneHandler implements rogne.ntnu.no.cardroid.Server.Server.Handler {
+
+        public PhoneHandler()
+        {
+
+        }
+
+        public void handle(Socket conn){
+            String line , input = "";
+            try {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                out = new PrintStream(conn.getOutputStream());
+
+                running = true;
+                while(running){
+                    line = in.readLine();
+                    send(line);
+                    if(line != null){
+                        printToView(line);
+                    }
+                }
+                out.print("Server shutting down");
+                printToView("Server shutting down");
+                conn.close();
+            }
+            catch (IOException e)
+            {
+                System.out.println("IOExeption on socet : " + e);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public class CarHandler implements rogne.ntnu.no.cardroid.Server.Server.Handler {
+        public CarHandler()
+        {
+
+        }
+
+        public void handle(Socket conn){
+            String line , input = "";
+            try {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                out = new PrintStream(conn.getOutputStream());
+
+                running = true;
+                while(running){
+                    line = in.readLine();
+                    if(line != null){
+                        printToView(line);
+                    }
+                }
+                out.print("Server shutting down");
+                printToView("Server shutting down");
+                conn.close();
+            }
+            catch (IOException e)
+            {
+                System.out.println("IOExeption on socet : " + e);
+                e.printStackTrace();
+            }
+        }
+
     }
 }
