@@ -20,10 +20,10 @@ public class CarServerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_server);
-        carServer = new Server(((TextView) findViewById(R.id.ServerLog)), 6670);
-        carServer.setHandler(carServer.new CarHandler());
-        phoneServer = new Server(((TextView) findViewById(R.id.ServerLog)), 6671);
-        phoneServer.setHandler(carServer.new PhoneHandler());
+        carServer = new Server(6670, Server.CAR_HANDLER);
+        phoneServer = new Server(6671, Server.PHONE_HANDLER);
+        carServer.setOnSendListener(line -> System.out.println(line));
+        phoneServer.setOnSendListener(line-> System.out.println(line));
         buttonListeners();
         SeekBar s = (SeekBar) findViewById(R.id.seekBar);
         s.setProgress(255);
@@ -46,13 +46,10 @@ public class CarServerActivity extends AppCompatActivity {
 
         new Thread(carServer).start();
         new Thread(phoneServer).start();
-        stop();
     }
 
     public void altCarControl(View v){
-        carServer.stopServer();
-        phoneServer.stopServer();
-        Intent intent = new Intent(this, AltControlActivity.class);
+        Intent intent = new Intent(this, CameraRecordActivity.class);
         startActivity(intent);
     }
 

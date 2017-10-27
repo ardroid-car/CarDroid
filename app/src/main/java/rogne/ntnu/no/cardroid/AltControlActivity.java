@@ -21,8 +21,10 @@ public class AltControlActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alt_control);
-        carServer = new Server(((TextView) findViewById(R.id.ServerLog2)), 6670);
-        phoneServer = new Server(((TextView) findViewById(R.id.ServerLog2)), 6671);
+        carServer = new Server(6670, Server.CAR_HANDLER);
+        phoneServer = new Server(6671, Server.PHONE_HANDLER);
+        carServer.setOnSendListener(line -> System.out.println(line));
+        phoneServer.setOnSendListener(line-> System.out.println(line));
         new Thread(carServer).start();
         new Thread(phoneServer).start();
         stop();
