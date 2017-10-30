@@ -49,6 +49,7 @@ public class CameraRecordActivity extends AppCompatActivity {
     private TextureView textureView;
     private Handler backgroundHandler;
     private HandlerThread backgroundThread;
+    private Surface surface;
 
     private static final int REQUEST_CAMERA_PERMISSION = 200;
 
@@ -127,12 +128,24 @@ public class CameraRecordActivity extends AppCompatActivity {
                 recorder.setOutputFile(outputFile.getAbsolutePath());
                 recorder.prepare();
                 final CaptureRequest.Builder captureRequest = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
-                captureRequest.addTarget(recorder.getSurface());
-                mCaptureRequest = captureRequest.build();
-                cameraDevice.createCaptureSession(Arrays.asList(recorder.getSurface()), new CameraCaptureSession.StateCallback() {
+                Surface surf = recorder.getSurface();
+                captureRequest.addTarget(surface);
+                final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
+                    @Override
+                    public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+                        super.onCaptureCompleted(session, request, result);
+                        Toast.makeText(CameraRecordActivity.this, "Saved:" + outputFile, Toast.LENGTH_SHORT).show();
+                        createCameraPreview();
+                    }
+                };
+                cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
                     @Override
                     public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                        session = cameraCaptureSession;
+                        try {
+                            cameraCaptureSession.capture(captureRequest.build(), captureListener, backgroundHandler);
+                        } catch (CameraAccessException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -202,7 +215,7 @@ public class CameraRecordActivity extends AppCompatActivity {
         SurfaceTexture texture = textureView.getSurfaceTexture();
         if(texture != null){
             texture.setDefaultBufferSize(videoDimensions.getWidth(),videoDimensions.getHeight());
-            Surface surface = new Surface(texture);
+            surface = new Surface(texture);
                 captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
                 captureRequestBuilder.addTarget(surface);
                 cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
