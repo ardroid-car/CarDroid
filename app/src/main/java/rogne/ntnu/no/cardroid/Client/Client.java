@@ -23,7 +23,11 @@ class Client implements Runnable {
     Boolean send = false;
     String sendMessage;
     String input;
-    Command cmd=null;
+    Command cmd = null;
+    static Boolean recieved = true;
+    String resend = "Test";
+    String lastInput;
+
 
 
     public Client(String ip, int port) {
@@ -31,12 +35,20 @@ class Client implements Runnable {
         this.port = port;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        Client.message = message;
+    }
+
 
     public void run() {
 
 
         try {
-            System.out.println ("Trying to connect");
+            System.out.println("Trying to connect");
 
             client = new Socket(ip, port);  //connect to server
 
@@ -59,15 +71,16 @@ class Client implements Runnable {
                     try {
                         buffer = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-                            while(true) {
+                        while (true) {
 
 
-                                System.out.println(buffer.toString());
+                            System.out.println(buffer.toString());
 
 
                             while ((in = buffer.readLine()) != null) {
                                 System.out.print("input is: ");
                                 System.out.println(in);
+                                lastInput = in;
 
                             }
 
@@ -82,10 +95,6 @@ class Client implements Runnable {
             });
             th.start();
             while (client.isConnected()) {
-                if (send) {
-                    System.out.println("Meesage sent: " + sendMessage);
-                    send(sendMessage);
-                }
 
 
                 if (client.isClosed()) {
@@ -97,42 +106,75 @@ class Client implements Runnable {
         }
     }
 
+    public void sendMessage(String i) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Boolean re=true;
+                try {
+                    while (re) {
+                        stream.println(i);
+                        Thread.sleep(500);
 
-    public String getMessage() {
-        return sendMessage;
+                        re=reSend(i);
+                    }
+                }catch(Exception e){
+                    System.out.println("Connection not established yet");
+                }
+
+
+            }
+
+        });
+        t.start();
     }
 
-    public void setMessage(String m) {
-        sendMessage = m;
-        send = true;
-    }
+
+
+
+
 
     public void send(String i) {
-        System.out.println("Message sent: " + i);
-        stream.println(i);
-        send = false;
+            setMessage(i);
+            System.out.println("Message sent: " + i);
+            sendMessage(i);
+
     }
 
-    public boolean isConnected() {
-        if (client.isConnected()) {
-            return true;
-        } else {
+    public boolean reSend(String i) {
+
+        if(i.equals(lastInput)){
+            System.out.println("Lastinput is: " + lastInput);
             return false;
+
         }
+        else  {
+            System.out.println("Resent" + i);
+            return true;
+        }
+
+
     }
+
+
+
 
     public void setOutput(String i) {
         input = i;
 
     }
 
-    public void setCommand(Command cm){
-        cmd=cm;
-        sendMessage=cmd.toString();
+    public void setCommand(Command cm) {
+        cmd = cm;
+        sendMessage = cmd.toString();
         send = true;
 
     }
 
+
+    public boolean isRecieved() {
+        return recieved;
+    }
 }
 
 
