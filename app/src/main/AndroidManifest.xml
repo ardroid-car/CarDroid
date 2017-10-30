@@ -44,6 +44,10 @@
         <activity android:name=".AltControlActivity" />
         <activity android:name=".CamOldActivity" />
         <activity android:name=".CopyCamActivity"></activity>
+        <activity android:name=".Client.SimpleClientActivity" android:exported="true" >
+
+
+        </activity>
     </application>
 
 </manifest>
