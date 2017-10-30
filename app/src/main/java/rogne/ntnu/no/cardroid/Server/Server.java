@@ -15,23 +15,36 @@ import java.util.logging.Handler;
  */
 
 public class Server implements Runnable {
-    private interface Handler{
-        void handle(Socket conn);
+    private interface Handler {
+        void handle(String line);
+
+        void setOutputStream(PrintStream out);
+
+        void setCallback(OnSendListener callback);
+
+        void onSend(String line);
     }
+
+    public interface OnSendListener {
+        void onSend(String sentLine);
+    }
+
+    PrintStream out;
+    public static Handler PHONE_HANDLER = new PhoneHandler();
+    public static Handler CAR_HANDLER = new CarHandler();
+    private OnSendListener callback;
     private Handler handler;
     private ServerSocket serverSocket = null;
     private int port;
     private boolean running = false;
     private boolean stop = false;
-    private TextView log;
-    PrintStream out;
-    public Server(TextView log, int port){
+
+    public Server(int port, Handler handler) {
         this.port = port;
-        this.log = log;
-    }
-    public void setHandler(Handler handler){
         this.handler = handler;
+        this.handler.setCallback(this.callback);
     }
+
     @Override
     public void run() {
 
@@ -40,16 +53,19 @@ public class Server implements Runnable {
             tries--;
         }
         boolean running = true;
-        while (running &! this.stop) {
+        while (running & !this.stop) {
             listenForConnection();
 
         }
     }
 
-    private  boolean startServer(int tries) {
+    public void setOnSendListener(OnSendListener listener) {
+        this.callback = listener;
+    }
+
+    private boolean startServer(int tries) {
         try {
             serverSocket = new ServerSocket(port, 10);
-            printToView("Server started on port: " + port);
             return true;
         } catch (IOException ex) {
             int attempts = 4 - tries;
@@ -58,7 +74,37 @@ public class Server implements Runnable {
             return false;
         }
     }
-    public void stopServer(){
+
+    private void listenForConnection() {
+        Socket conn = null;
+        try {
+            conn = serverSocket.accept();
+            handle(conn);
+        } catch (IOException ex) {
+        }
+    }
+
+    public void handle(Socket conn) {
+        String line, input = "";
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            out = new PrintStream(conn.getOutputStream());
+            handler.setOutputStream(out);
+
+            running = true;
+            while (running) {
+                line = in.readLine();
+                handler.handle(line);
+            }
+            out.print("Server shutting down");
+            conn.close();
+        } catch (IOException e) {
+            System.out.println("IOExeption on socet : " + e);
+            e.printStackTrace();
+        }
+    }
+
+    public void stopServer() {
         running = false;
         stop = true;
         try {
@@ -68,95 +114,61 @@ public class Server implements Runnable {
         }
     }
 
-    private void listenForConnection() {
-        Socket conn = null;
-        try {
-            conn = serverSocket.accept();
-            printToView("Connection recived from " + conn.getInetAddress().getHostName() + " : " + conn.getPort());
-            handler.handle(conn);
-        } catch (IOException ex) {
-            printToView("Could not accept connection. Reason: " + ex.getMessage());
-        }
+    public void send(String line){
+        handler.handle(line);
     }
 
+    public static class PhoneHandler implements rogne.ntnu.no.cardroid.Server.Server.Handler {
+        private PrintStream out;
+        private OnSendListener callback;
 
-    private void printToView(final String line) {
-        System.out.println(line);
-        log.post(new Runnable() {
-            @Override
-            public void run() {
-                log.append("\n" + line);
-            }
-        });
-    }
-    public boolean send(String line){
-        if(out != null){
-            //printToView(line);
-            out.println("[" + line +"]");
-        }
-        return out != null;
-    }
-    public class PhoneHandler implements rogne.ntnu.no.cardroid.Server.Server.Handler {
-
-        public PhoneHandler()
-        {
-
+        @Override
+        public void setOutputStream(PrintStream out) {
+            this.out = out;
         }
 
-        public void handle(Socket conn){
-            String line , input = "";
-            try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                out = new PrintStream(conn.getOutputStream());
+        @Override
+        public void handle(String line) {
+            out.println(line);
+            onSend(line);
+        }
 
-                running = true;
-                while(running){
-                    line = in.readLine();
-                    send(line);
-                    if(line != null){
-                        printToView(line);
-                    }
-                }
-                out.print("Server shutting down");
-                printToView("Server shutting down");
-                conn.close();
-            }
-            catch (IOException e)
-            {
-                System.out.println("IOExeption on socet : " + e);
-                e.printStackTrace();
+        @Override
+        public void setCallback(OnSendListener callback) {
+            this.callback = callback;
+        }
+
+        public void onSend(String lineSent) {
+            if (callback != null) {
+                callback.onSend(lineSent);
             }
         }
     }
 
-    public class CarHandler implements rogne.ntnu.no.cardroid.Server.Server.Handler {
-        public CarHandler()
-        {
+    public static class CarHandler implements rogne.ntnu.no.cardroid.Server.Server.Handler {
+        private PrintStream out;
+        private OnSendListener callback;
+
+        @Override
+        public void setOutputStream(PrintStream out) {
+            this.out = out;
         }
 
-        public void handle(Socket conn){
-            String line , input = "";
-            try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                out = new PrintStream(conn.getOutputStream());
-
-                running = true;
-                while(running){
-                    line = in.readLine();
-                    if(line != null){
-                        printToView(line);
-                    }
-                }
-                out.print("Server shutting down");
-                printToView("Server shutting down");
-                conn.close();
-            }
-            catch (IOException e)
-            {
-                System.out.println("IOExeption on socet : " + e);
-                e.printStackTrace();
-            }
+        @Override
+        public void handle(String line) {
+            out.println(line);
+            onSend(line);
         }
 
+        @Override
+        public void setCallback(OnSendListener callback) {
+            this.callback = callback;
+        }
+
+        public void onSend(String lineSent) {
+            if (callback != null) {
+                callback.onSend(lineSent);
+            }
+        }
     }
 }
