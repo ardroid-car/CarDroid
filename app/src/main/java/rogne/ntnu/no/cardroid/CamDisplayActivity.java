@@ -1,14 +1,19 @@
 package rogne.ntnu.no.cardroid;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceView;
+import android.view.TextureView;
 import android.widget.ImageView;
 
 import java.io.BufferedInputStream;
@@ -25,15 +30,41 @@ import java.util.concurrent.ExecutionException;
 
 public class CamDisplayActivity extends AppCompatActivity {
     Socket socket;
+    ParcelFileDescriptor pfd;
+    MediaPlayer mp;
+    private TextureView.SurfaceTextureListener mSurfaceTextureListener
+            = new TextureView.SurfaceTextureListener() {
+
+        @Override
+        public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture,
+                                              int width, int height) {
+            displayStart(surfaceTexture);
+        }
+
+        @Override
+        public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture,
+                                                int width, int height) {
+        }
+
+        @Override
+        public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+            return true;
+        }
+
+        @Override
+        public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mp = new MediaPlayer();
         setContentView(R.layout.activity_cam_display);
         intialiseView();
-        ParcelFileDescriptor pfd = ParcelFileDescriptor.fromSocket(socket);
-        System.out.println("New picutre");
-        displayStart(pfd);
+        pfd = ParcelFileDescriptor.fromSocket(socket);
+        ((TextureView) findViewById(R.id.surface)).setSurfaceTextureListener(mSurfaceTextureListener);
     }
 
     private void intialiseView() {
@@ -63,23 +94,58 @@ public class CamDisplayActivity extends AppCompatActivity {
         }
     }
 
-    private void displayStart(ParcelFileDescriptor pfd) {
+    private String getVideoFilePath() {
+        final File dir = getExternalFilesDir(null);
+        return (dir == null ? "" : (dir.getAbsolutePath() + "/"))
+                + "test" + ".jpg";
+    }
+    private void displayStart(SurfaceTexture surfaceTexture) {
+        Log.d("Bleh", "bleh");
         ImageView iv = (ImageView) findViewById(R.id.display_image);
         InputStream input = new FileInputStream(pfd.getFileDescriptor());
-        BufferedInputStream buf;
-        buf = new BufferedInputStream(input);
-        Bitmap bMap = BitmapFactory.decodeStream(buf);
-        iv.setImageBitmap(bMap);/*
-                OutputStream output = new FileOutputStream(file);
-                try {
-                    byte[] buffer = new byte[2^22]; // or other buffer size
-                    int read;
+        File file = new File(getVideoFilePath());
+        System.out.println(file.getAbsolutePath());
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            byte[] buffer = new byte[input.available()];
+            input.read(buffer);
+            out.write(buffer);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-                    while ((read = input.read(buffer)) != -1) {
-                        output.write(buffer, 0, read);
-                    }
-                } finally {
-                    output.close();
-                }*/
+        try {
+            mp.setDataSource(file.getAbsolutePath());
+            Surface s = new Surface(surfaceTexture);
+            mp.setSurface(s);
+            mp.prepare();
+            mp.start();
+            BufferedInputStream buf;
+            try {
+                buf = new BufferedInputStream(input);
+                System.out.println(System.currentTimeMillis());
+                Bitmap bMap = BitmapFactory.decodeStream(buf);
+                System.out.println(System.currentTimeMillis());
+                iv.setImageBitmap(bMap);
+                if (input != null) {
+                    input.close();
+                }
+                if (buf != null) {
+                    buf.close();
+                }/*
+        ImageStreamListener isl = new ImageStreamListener(new InetSocketAddress("192.168.0.125", 6672));
+        isl.setOnNewImageListener(c-> updateImage(c));
+        new Thread(isl).start();
+        */
+            } finally {
+                input.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

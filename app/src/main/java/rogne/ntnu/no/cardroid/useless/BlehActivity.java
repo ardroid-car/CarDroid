@@ -462,7 +462,7 @@ public class BlehActivity extends AppCompatActivity {
         }
         boolean test = pfd.getFileDescriptor().valid();
         RandomAccessFile rf = new RandomAccessFile(mNextVideoAbsolutePath, "rws");
-        mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);
+        mMediaRecorder.setOutputFile(pfd.getFileDescriptor());
         mMediaRecorder.setVideoEncodingBitRate(10000000);
         mMediaRecorder.setVideoFrameRate(30);
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());

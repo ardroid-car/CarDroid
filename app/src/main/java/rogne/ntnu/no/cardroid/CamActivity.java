@@ -162,8 +162,10 @@ public class CamActivity extends AppCompatActivity {
             int width = 640;
             int height = 480;
             if (jpegSizes != null && 0 < jpegSizes.length) {
-                width = jpegSizes[0].getWidth();
-                height = jpegSizes[0].getHeight();
+                width = jpegSizes[jpegSizes.length-2].getWidth();
+                height = jpegSizes[jpegSizes.length-2].getHeight();
+                System.out.println(width);
+                System.out.println(height);
             }
             ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
             List<Surface> outputSurfaces = new ArrayList<>(2);
@@ -213,8 +215,6 @@ public class CamActivity extends AppCompatActivity {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(CamActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
-                    createCameraPreview();
                 }
             };
             cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
