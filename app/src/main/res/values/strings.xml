@@ -5,4 +5,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="server_on">Server is on.</string>
     <string name="server_off">Server is off.</string>
+    <string name="stop">Stop</string>
+    <string name="record">Record</string>
+    <string name="intro_message">IntroMessage</string>
 </resources>

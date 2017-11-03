@@ -29,7 +29,6 @@ public class Server implements Runnable {
         void onSend(String sentLine);
     }
 
-    PrintStream out;
     public static Handler PHONE_HANDLER = new PhoneHandler();
     public static Handler CAR_HANDLER = new CarHandler();
     private OnSendListener callback;
@@ -86,6 +85,7 @@ public class Server implements Runnable {
 
     public void handle(Socket conn) {
         String line, input = "";
+        PrintStream out;
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             out = new PrintStream(conn.getOutputStream());

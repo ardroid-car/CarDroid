@@ -12,7 +12,9 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-feature android:name="android.hardware.camera2.full" />
+    <uses-feature android:name="android.hardware.camera2" />
     <uses-feature android:name="android.hardware.location.gps" />
+    <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -42,8 +44,11 @@
         <activity android:name=".CamActivity" />
         <activity android:name=".CamDisplayActivity" />
         <activity android:name=".AltControlActivity" />
-        <activity android:name=".CamOldActivity" />
-        <activity android:name=".CameraRecordActivity" />
+        <activity android:name=".useless.CamOldActivity" />
+        <activity android:name=".useless.CameraRecordActivity" />
+        <activity android:name=".useless.CamRecordActivity" />
+        <activity android:name=".useless.BlehActivity"></activity>
+        <activity android:name=".Client.SimpleClientActivity" />
     </application>
 
 </manifest>

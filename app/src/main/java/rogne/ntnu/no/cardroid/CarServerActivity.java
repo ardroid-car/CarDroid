@@ -9,6 +9,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import rogne.ntnu.no.cardroid.Server.Server;
+import rogne.ntnu.no.cardroid.useless.BlehActivity;
 
 public class CarServerActivity extends AppCompatActivity {
 
@@ -49,7 +50,7 @@ public class CarServerActivity extends AppCompatActivity {
     }
 
     public void altCarControl(View v){
-        Intent intent = new Intent(this, CameraRecordActivity.class);
+        Intent intent = new Intent(this, BlehActivity.class);
         startActivity(intent);
     }
 
