@@ -107,16 +107,23 @@ public class SimpleClientActivity extends Activity {
                 Command forward;
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     forward=new Command(Command.FORWARD,speed,Command.START);
-                    message = forward.toString();
-                    client.setMessage(message);
+                    message =forward.toString();
+                    client.send(message);
                     printView(client.getMessage());
+
+
+
+
 
 
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     forward=new Command(Command.FORWARD,speed,Command.STOP);
                     message = forward.toString();
-                    client.setMessage(message);
+                    client.send(message);
+                    printView(client.getMessage());
+
+
                     printView(client.getMessage());
 
                 }
@@ -135,7 +142,7 @@ public class SimpleClientActivity extends Activity {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                    right=new Command(Command.TURN_RIGHT,speed,Command.START);
                     message = right.toString();
-                    client.setMessage(message);
+                    client.send(message);
                     printView(client.getMessage());
 
 
@@ -143,7 +150,7 @@ public class SimpleClientActivity extends Activity {
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     right=new Command(Command.TURN_RIGHT,speed,Command.STOP);
                     message = right.toString();
-                    client.setMessage(message);
+                    client.send(message);
                     printView(client.getMessage());
 
                 }
@@ -161,16 +168,16 @@ public class SimpleClientActivity extends Activity {
                 Command left;
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     left=new Command(Command.TURN_LEFT,speed,Command.START);
-                    message = left.toString();
-                    client.setMessage(message);
+                    message =left.toString();
+                    client.send(message);
                     printView(client.getMessage());
 
 
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     left=new Command(Command.TURN_LEFT,speed,Command.STOP);
-                    message = left.toString();
-                    client.setMessage(message);
+                    message =left.toString();
+                    client.send(message);
                     printView(client.getMessage());
 
                 }
@@ -188,18 +195,17 @@ public class SimpleClientActivity extends Activity {
                 Command back;
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                    back=new Command(Command.BACKWARD,speed,Command.START);
-                    message = back.toString();
-                    client.setMessage(message);
-                    printView(client.getMessage());
+                    message =back.toString();
+                    client.send(message);
+                    printView(client.getMessage());;
 
 
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     back=new Command(Command.BACKWARD,speed,Command.STOP);
-                    message = back.toString();
-                    client.setMessage(message);
+                    message =back.toString();
+                    client.send(message);
                     printView(client.getMessage());
-
                 }
 
                 //   printView(message);

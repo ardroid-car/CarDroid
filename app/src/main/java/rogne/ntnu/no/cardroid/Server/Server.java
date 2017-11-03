@@ -8,29 +8,22 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Handler;
+
+
 
 /**
  * Created by Kristoffer on 2017-09-28.
  */
 
 public class Server implements Runnable {
-    private interface Handler {
-        void handle(String line);
 
-        void setOutputStream(PrintStream out);
-
-        void setCallback(OnSendListener callback);
-
-        void onSend(String line);
-    }
 
     public interface OnSendListener {
         void onSend(String sentLine);
     }
 
-    public static Handler PHONE_HANDLER = new PhoneHandler();
-    public static Handler CAR_HANDLER = new CarHandler();
+    public  Handler PHONE_HANDLER = new PhoneHandler();
+    public Handler CAR_HANDLER = new CarHandler();
     private OnSendListener callback;
     private Handler handler;
     private ServerSocket serverSocket = null;
@@ -118,57 +111,5 @@ public class Server implements Runnable {
         handler.handle(line);
     }
 
-    public static class PhoneHandler implements rogne.ntnu.no.cardroid.Server.Server.Handler {
-        private PrintStream out;
-        private OnSendListener callback;
 
-        @Override
-        public void setOutputStream(PrintStream out) {
-            this.out = out;
-        }
-
-        @Override
-        public void handle(String line) {
-            out.println(line);
-            onSend(line);
-        }
-
-        @Override
-        public void setCallback(OnSendListener callback) {
-            this.callback = callback;
-        }
-
-        public void onSend(String lineSent) {
-            if (callback != null) {
-                callback.onSend(lineSent);
-            }
-        }
-    }
-
-    public static class CarHandler implements rogne.ntnu.no.cardroid.Server.Server.Handler {
-        private PrintStream out;
-        private OnSendListener callback;
-
-        @Override
-        public void setOutputStream(PrintStream out) {
-            this.out = out;
-        }
-
-        @Override
-        public void handle(String line) {
-            out.println(line);
-            onSend(line);
-        }
-
-        @Override
-        public void setCallback(OnSendListener callback) {
-            this.callback = callback;
-        }
-
-        public void onSend(String lineSent) {
-            if (callback != null) {
-                callback.onSend(lineSent);
-            }
-        }
-    }
 }

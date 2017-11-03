@@ -158,11 +158,11 @@ class Client implements Runnable {
 
 
 
-
     public void setOutput(String i) {
         input = i;
 
     }
+
 
     public void setCommand(Command cm) {
         cmd = cm;
