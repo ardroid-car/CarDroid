@@ -1,4 +1,4 @@
-package rogne.ntnu.no.cardroid;
+package rogne.ntnu.no.cardroid.useless;
 
 import android.Manifest;
 import android.content.Context;
@@ -11,22 +11,20 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.MediaCodec;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Size;
 import android.view.Surface;
-import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
@@ -34,9 +32,12 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Arrays;
-import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import rogne.ntnu.no.cardroid.R;
 
 public class CameraRecordActivity extends AppCompatActivity {
     private String cameraId;
@@ -104,7 +105,7 @@ public class CameraRecordActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startRecording();
+                setUpCamera();
             }
         });
     }
@@ -116,36 +117,34 @@ public class CameraRecordActivity extends AppCompatActivity {
             if(cameraCharacteristics != null){
                 recordSizes = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(MediaCodec.class);
             }
-            videoDimensions = recordSizes[0];
+            File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+            final File outputFile = new File(dir.getAbsolutePath(), "testHigh.mp3");
+            //ParcelFileDescriptor pfd = ParcelFileDescriptor.fromSocket(getConnection());
+            videoDimensions = recordSizes[recordSizes.length-1];
             recorder = new MediaRecorder();
+            recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
             recorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
             recorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
+            recorder.setVideoEncodingBitRate(10000000);
+            recorder.setVideoFrameRate(30);
+            recorder.setMaxFileSize(0);
+            recorder.setPreviewDisplay(new Surface(textureView.getSurfaceTexture()));
             recorder.setVideoSize(videoDimensions.getWidth(), videoDimensions.getHeight());
+            recorder.setOutputFile(outputFile.getAbsolutePath());
+           // recorder.setOutputFile(pfd.getFileDescriptor());
             try{
-                File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-                final File outputFile = new File(dir.getAbsolutePath(), "testHigh.mp4");
-                recorder.setOutputFile(outputFile.getAbsolutePath());
                 recorder.prepare();
                 final CaptureRequest.Builder captureRequest = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
-                Surface surf = recorder.getSurface();
                 captureRequest.addTarget(surface);
-                final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
-                    @Override
-                    public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-                        super.onCaptureCompleted(session, request, result);
-                        Toast.makeText(CameraRecordActivity.this, "Saved:" + outputFile, Toast.LENGTH_SHORT).show();
-                        createCameraPreview();
-                    }
-                };
-                cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
+                captureRequest.addTarget(recorder.getSurface());
+                mCaptureRequest = captureRequest.build();
+                cameraDevice.createCaptureSession(Arrays.asList(surface,recorder.getSurface()), new CameraCaptureSession.StateCallback() {
                     @Override
                     public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                        try {
-                            cameraCaptureSession.capture(captureRequest.build(), captureListener, backgroundHandler);
-                        } catch (CameraAccessException e) {
-                            e.printStackTrace();
-                        }
+                        session = cameraCaptureSession;
+                        startRecording(session);
                     }
 
                     @Override
@@ -161,30 +160,21 @@ public class CameraRecordActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    protected void startRecording(){
-        setUpCamera();
+    private void startRecording(CameraCaptureSession session){
         try{
             if(!recording){
                 ((Button) findViewById(R.id.recorder_button)).setText("Stop");
+                session.setRepeatingRequest(mCaptureRequest, new CameraCaptureSession.CaptureCallback(){},null);
                 recorder.start();
-                session.setRepeatingRequest(mCaptureRequest, new CameraCaptureSession.CaptureCallback(){
-                    @Override
-                    public void onCaptureStarted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, long timestamp, long frameNumber) {
-                        super.onCaptureStarted(session, request, timestamp, frameNumber);
-                    }
-
-                    @Override
-                    public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
-                        super.onCaptureCompleted(session, request, result);
-                    }
-                },null);
                 ((Button) findViewById(R.id.recorder_button)).setText("Stop");
                 recording = true;
             } else {
                 ((Button) findViewById(R.id.recorder_button)).setText("Start");
                 recording = false;
-                session.stopRepeating();
                 recorder.stop();
+                recorder.reset();
+                recorder.release();
+                recorder= null;
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -266,5 +256,39 @@ public class CameraRecordActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    private Socket getConnection() {
+        class CameraSocket extends AsyncTask<Integer, Integer, Socket> {
+            @Override
+            protected Socket doInBackground(Integer... ints) {
+                Socket socket = null;
+                try
+
+                {
+                    ServerSocket serverSocket = new ServerSocket(ints[0]);
+                    socket = serverSocket.accept();
+                } catch (
+                        IOException e)
+
+                {
+                    e.printStackTrace();
+                }
+                return socket;
+            }
+        }
+        CameraSocket cs = new CameraSocket();
+        cs.execute(6672);
+        Socket s = null;
+        System.out.println("getting socket");
+        try {
+            while (s == null) {
+                s = cs.get();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return s;
     }
 }

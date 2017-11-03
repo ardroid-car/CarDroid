@@ -32,13 +32,13 @@ public class CamDisplayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cam_display);
         intialiseView();
         ParcelFileDescriptor pfd = ParcelFileDescriptor.fromSocket(socket);
-            System.out.println("New picutre");
-            displayStart(pfd);
+        System.out.println("New picutre");
+        displayStart(pfd);
     }
 
     private void intialiseView() {
 
-        class NetworkCam extends AsyncTask<Integer, Void, Socket>{
+        class NetworkCam extends AsyncTask<Integer, Void, Socket> {
             @Override
             protected Socket doInBackground(Integer... integers) {
                 Socket socket = new Socket();
@@ -52,7 +52,7 @@ public class CamDisplayActivity extends AppCompatActivity {
         }
         NetworkCam nc = new NetworkCam();
         nc.execute(1);
-        while(socket == null){
+        while (socket == null) {
             try {
                 socket = nc.get();
             } catch (InterruptedException e) {
@@ -66,25 +66,10 @@ public class CamDisplayActivity extends AppCompatActivity {
     private void displayStart(ParcelFileDescriptor pfd) {
         ImageView iv = (ImageView) findViewById(R.id.display_image);
         InputStream input = new FileInputStream(pfd.getFileDescriptor());
-        try {
-            File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
-            if(!file.exists()){
-                file.createNewFile();
-            }
-            System.out.println(file.getAbsolutePath());
-            BufferedInputStream buf;
-            try {
-                buf = new BufferedInputStream(input);
-                System.out.println(System.currentTimeMillis());
-                Bitmap bMap = BitmapFactory.decodeStream(buf);
-                System.out.println(System.currentTimeMillis());
-                iv.setImageBitmap(bMap);
-                if (input != null) {
-                    input.close();
-                }
-                if (buf != null) {
-                    buf.close();
-                }/*
+        BufferedInputStream buf;
+        buf = new BufferedInputStream(input);
+        Bitmap bMap = BitmapFactory.decodeStream(buf);
+        iv.setImageBitmap(bMap);/*
                 OutputStream output = new FileOutputStream(file);
                 try {
                     byte[] buffer = new byte[2^22]; // or other buffer size
@@ -96,13 +81,5 @@ public class CamDisplayActivity extends AppCompatActivity {
                 } finally {
                     output.close();
                 }*/
-            } finally {
-                    input.close();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
