@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import rogne.ntnu.no.cardroid.Server.CarHandler;
+import rogne.ntnu.no.cardroid.Server.PhoneHandler;
 import rogne.ntnu.no.cardroid.Server.Server;
 import rogne.ntnu.no.cardroid.useless.BlehActivity;
 
@@ -21,8 +23,8 @@ public class CarServerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_server);
-        carServer = new Server(6670, Server.CAR_HANDLER);
-        phoneServer = new Server(6671, Server.PHONE_HANDLER);
+        carServer = new Server(6670, new CarHandler());
+        phoneServer = new Server(6671, new PhoneHandler());
         carServer.setOnSendListener(line -> System.out.println(line));
         phoneServer.setOnSendListener(line-> System.out.println(line));
         buttonListeners();
