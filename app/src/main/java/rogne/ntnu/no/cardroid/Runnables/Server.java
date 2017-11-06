@@ -1,6 +1,4 @@
-package rogne.ntnu.no.cardroid.Server;
-
-import android.widget.TextView;
+package rogne.ntnu.no.cardroid.Runnables;
 
 import java.io.BufferedReader;
 import java.io.IOException;

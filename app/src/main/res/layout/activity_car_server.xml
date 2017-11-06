@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
-    tools:context="rogne.ntnu.no.cardroid.CarServerActivity">
+    tools:context="rogne.ntnu.no.cardroid.Activities.CarServerActivity">
 
     <TextView
         android:id="@+id/ServerLog"

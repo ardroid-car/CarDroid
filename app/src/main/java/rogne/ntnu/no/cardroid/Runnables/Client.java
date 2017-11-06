@@ -1,4 +1,4 @@
-package rogne.ntnu.no.cardroid.Client;
+package rogne.ntnu.no.cardroid.Runnables;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,13 +6,13 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
-import rogne.ntnu.no.cardroid.Command;
+import rogne.ntnu.no.cardroid.Data.Command;
 
 /**
  * Created by Mikael on 13.10.2017.
  */
 
-class Client implements Runnable {
+public class Client implements Runnable {
 
     static String message = "test";
     static String ip;

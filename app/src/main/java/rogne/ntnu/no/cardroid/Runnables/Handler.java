@@ -1,4 +1,4 @@
-package rogne.ntnu.no.cardroid.Server;
+package rogne.ntnu.no.cardroid.Runnables;
 
 import java.io.PrintStream;
 

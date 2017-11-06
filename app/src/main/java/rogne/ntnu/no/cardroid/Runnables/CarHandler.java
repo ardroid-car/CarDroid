@@ -1,4 +1,4 @@
-package rogne.ntnu.no.cardroid.Server;
+package rogne.ntnu.no.cardroid.Runnables;
 
 import java.io.PrintStream;
 
@@ -6,7 +6,7 @@ import java.io.PrintStream;
  * Created by Mikael on 03.11.2017.
  */
 
-public class PhoneHandler implements rogne.ntnu.no.cardroid.Server.Handler {
+public class CarHandler implements Handler {
     private PrintStream out;
     private Server.OnSendListener callback;
 
@@ -32,3 +32,4 @@ public class PhoneHandler implements rogne.ntnu.no.cardroid.Server.Handler {
         }
     }
 }
+

@@ -1,4 +1,4 @@
-package rogne.ntnu.no.cardroid;
+package rogne.ntnu.no.cardroid.Activities;
 
 import android.Manifest;
 import android.content.Context;
@@ -25,7 +25,6 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -40,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import rogne.ntnu.no.cardroid.R;
 
 public class CamActivity extends AppCompatActivity {
     ServerSocket welcome = null;

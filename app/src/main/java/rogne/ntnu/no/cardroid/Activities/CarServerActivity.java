@@ -1,4 +1,4 @@
-package rogne.ntnu.no.cardroid;
+package rogne.ntnu.no.cardroid.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,9 +8,11 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import rogne.ntnu.no.cardroid.Server.CarHandler;
-import rogne.ntnu.no.cardroid.Server.PhoneHandler;
-import rogne.ntnu.no.cardroid.Server.Server;
+import rogne.ntnu.no.cardroid.Data.Command;
+import rogne.ntnu.no.cardroid.R;
+import rogne.ntnu.no.cardroid.Runnables.CarHandler;
+import rogne.ntnu.no.cardroid.Runnables.PhoneHandler;
+import rogne.ntnu.no.cardroid.Runnables.Server;
 import rogne.ntnu.no.cardroid.useless.BlehActivity;
 
 public class CarServerActivity extends AppCompatActivity {

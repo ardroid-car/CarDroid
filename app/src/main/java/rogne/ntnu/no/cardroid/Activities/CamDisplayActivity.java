@@ -1,4 +1,4 @@
-package rogne.ntnu.no.cardroid;
+package rogne.ntnu.no.cardroid.Activities;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -27,6 +27,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
+
+import rogne.ntnu.no.cardroid.R;
 
 public class CamDisplayActivity extends AppCompatActivity {
     Socket socket;
@@ -108,7 +110,10 @@ public class CamDisplayActivity extends AppCompatActivity {
         try {
             FileOutputStream out = new FileOutputStream(file);
             byte[] buffer = new byte[input.available()];
-            input.read(buffer);
+            int len = input.read(buffer);
+            while(len == 0){
+                len = input.read(buffer);
+            }
             out.write(buffer);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -1,4 +1,4 @@
-package rogne.ntnu.no.cardroid;
+package rogne.ntnu.no.cardroid.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import rogne.ntnu.no.cardroid.Client.SimpleClientActivity;
-import rogne.ntnu.no.cardroid.Server.Server;
+import rogne.ntnu.no.cardroid.R;
+import rogne.ntnu.no.cardroid.Runnables.Server;
 
 public class MainActivity extends AppCompatActivity {
     Server  carServer;

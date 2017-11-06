@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="rogne.ntnu.no.cardroid.CamDisplayActivity">
+    tools:context="rogne.ntnu.no.cardroid.Activities.CamDisplayActivity">
 
     <ImageView
         android:id="@+id/display_image"

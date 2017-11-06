@@ -1,4 +1,4 @@
-package rogne.ntnu.no.cardroid;
+package rogne.ntnu.no.cardroid.Data;
 
 /**
  * Created by Kristoffer on 2017-09-29.

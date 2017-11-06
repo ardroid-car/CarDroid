@@ -1,4 +1,4 @@
-package rogne.ntnu.no.cardroid.Client;
+package rogne.ntnu.no.cardroid.Activities;
 
 
 import android.app.Activity;
@@ -12,7 +12,8 @@ import android.widget.TextView;
 
 import java.io.PrintWriter;
 
-import rogne.ntnu.no.cardroid.Command;
+import rogne.ntnu.no.cardroid.Runnables.Client;
+import rogne.ntnu.no.cardroid.Data.Command;
 import rogne.ntnu.no.cardroid.R;
 
 public class SimpleClientActivity extends Activity {
