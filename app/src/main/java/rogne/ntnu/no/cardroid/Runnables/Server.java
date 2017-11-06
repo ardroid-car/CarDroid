@@ -20,8 +20,8 @@ public class Server implements Runnable {
         void onSend(String sentLine);
     }
 
-    public  Handler PHONE_HANDLER = new PhoneHandler();
-    public Handler CAR_HANDLER = new CarHandler();
+    public  Handler PHONE_HANDLER;
+    public Handler CAR_HANDLER;
     private OnSendListener callback;
     private Handler handler;
     private ServerSocket serverSocket = null;

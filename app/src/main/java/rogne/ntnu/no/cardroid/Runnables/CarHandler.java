@@ -9,6 +9,12 @@ import java.io.PrintStream;
 public class CarHandler implements Handler {
     private PrintStream out;
     private Server.OnSendListener callback;
+    private CommandBox box;
+
+    public CarHandler(CommandBox box)
+    {
+        this.box = box;
+    }
 
     @Override
     public void setOutputStream(PrintStream out) {
@@ -28,7 +34,7 @@ public class CarHandler implements Handler {
 
     public void onSend(String lineSent) {
         if (callback != null) {
-            callback.onSend(lineSent);
+            callback.onSend(box.getCmd().toString());
         }
     }
 }

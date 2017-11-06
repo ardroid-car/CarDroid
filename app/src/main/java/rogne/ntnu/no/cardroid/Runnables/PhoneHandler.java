@@ -2,13 +2,22 @@ package rogne.ntnu.no.cardroid.Runnables;
 
 import java.io.PrintStream;
 
+import rogne.ntnu.no.cardroid.Data.Command;
+
 /**
  * Created by Mikael on 03.11.2017.
  */
 
-public class PhoneHandler implements Handler {
+public class PhoneHandler implements Handler{
     private PrintStream out;
     private Server.OnSendListener callback;
+    private CommandBox box;
+
+    public PhoneHandler(CommandBox box)
+    {
+        this.box = box;
+    }
+
 
     @Override
     public void setOutputStream(PrintStream out) {
@@ -17,8 +26,10 @@ public class PhoneHandler implements Handler {
 
     @Override
     public void handle(String line) {
+        box.putCmd(new Command(line));
         out.println(line);
         onSend(line);
+
     }
 
     @Override
@@ -31,4 +42,5 @@ public class PhoneHandler implements Handler {
             callback.onSend(lineSent);
         }
     }
+
 }
