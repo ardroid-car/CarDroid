@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         Intent client = new Intent(this, SimpleClientActivity.class);
-        Intent server = new Intent(this, CarServerActivity.class);
+        Intent server = new Intent(this, ServerActivity.class);
        Button phoneButton =(Button) findViewById(R.id.phoneButton);
        Button carButton= (Button) findViewById(R.id.carButton);
 

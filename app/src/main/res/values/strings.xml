@@ -8,4 +8,9 @@
     <string name="stop">Stop</string>
     <string name="record">Record</string>
     <string name="intro_message">IntroMessage</string>
+    <string name="not_connected">Not Connected</string>
+    <string name="console_log">Console Log</string>
+    <string name="waiting_for_connection">Waiting for connection</string>
+    <string name="connected">Connected</string>
+    <string name="connected_to">Connected to</string>
 </resources>

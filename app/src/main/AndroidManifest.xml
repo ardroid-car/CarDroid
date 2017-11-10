@@ -49,14 +49,9 @@
 
 
 
-        <activity android:name=".Activities.CarServerActivity"/>
+        <activity android:name=".Activities.ServerActivity"/>
         <activity android:name=".Activities.CamActivity" />
         <activity android:name=".Activities.CamDisplayActivity" />
-        <activity android:name=".useless.AltControlActivity" />
-        <activity android:name=".useless.CamOldActivity" />
-        <activity android:name=".useless.CameraRecordActivity" />
-        <activity android:name=".useless.CamRecordActivity" />
-        <activity android:name=".useless.BlehActivity"></activity>
         <activity android:name=".Activities.SimpleClientActivity" />
     </application>
 

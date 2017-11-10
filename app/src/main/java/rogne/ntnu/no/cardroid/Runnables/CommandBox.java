@@ -12,30 +12,30 @@ import rogne.ntnu.no.cardroid.Data.Command;
 
 public class CommandBox {
 
-    ArrayList<Command> commands = new ArrayList<>();
-    private boolean available = false;
+    private ArrayList<Command> commands = new ArrayList<>();
+    private int size = 1;
+    public CommandBox(int size){
+        this.size = size;
+    }
 
-    public CommandBox()
-    {
+    public CommandBox() {
     }
 
     public synchronized Command getCmd()
     {
-        while(!available) {
+        while(commands.isEmpty()) {
             try {
                 wait();
             } catch (InterruptedException ex) {
                 Logger.getLogger(CommandBox.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        available = !commands.isEmpty();
         notifyAll();
-        return commands.get(0);
+        return commands.remove(0);
     }
-
     public synchronized void putCmd(Command command)
     {
-        while(available)
+        while(commands.size()> size)
         {
             try {
                 wait();
@@ -43,8 +43,8 @@ public class CommandBox {
                 Logger.getLogger(CommandBox.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        available = true;
-        notifyAll();
         this.commands.add(command);
+        notifyAll();
     }
+
 }

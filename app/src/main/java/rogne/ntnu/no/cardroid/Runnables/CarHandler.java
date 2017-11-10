@@ -10,15 +10,27 @@ public class CarHandler implements Handler {
     private PrintStream out;
     private Server.OnSendListener callback;
     private CommandBox box;
+    private boolean running = false;
 
     public CarHandler(CommandBox box)
     {
         this.box = box;
+        running = true;
+        Thread fetcher = new Thread(() -> {
+            while(running){
+                handle(box.getCmd().toString());
+            }
+        });
+        fetcher.start();
     }
 
     @Override
     public void setOutputStream(PrintStream out) {
         this.out = out;
+    }
+
+    public void stopFetcher(){
+        running = false;
     }
 
     @Override
@@ -34,8 +46,7 @@ public class CarHandler implements Handler {
 
     public void onSend(String lineSent) {
         if (callback != null) {
-            callback.onSend(box.getCmd().toString());
+            callback.onSend(lineSent);
         }
     }
 }
-

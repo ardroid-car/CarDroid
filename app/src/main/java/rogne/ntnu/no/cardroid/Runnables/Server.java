@@ -20,9 +20,13 @@ public class Server implements Runnable {
         void onSend(String sentLine);
     }
 
+    public interface OnConnected{
+        void onConnected(Socket socket);
+    }
     public  Handler PHONE_HANDLER;
     public Handler CAR_HANDLER;
-    private OnSendListener callback;
+    private OnSendListener onSendListener;
+    private OnConnected onConnectedListener;
     private Handler handler;
     private ServerSocket serverSocket = null;
     private int port;
@@ -32,7 +36,7 @@ public class Server implements Runnable {
     public Server(int port, Handler handler) {
         this.port = port;
         this.handler = handler;
-        this.handler.setCallback(this.callback);
+        this.handler.setCallback(this.onSendListener);
     }
 
     @Override
@@ -50,7 +54,10 @@ public class Server implements Runnable {
     }
 
     public void setOnSendListener(OnSendListener listener) {
-        this.callback = listener;
+        this.onSendListener = listener;
+    }
+    public void setOnConnectedListener(OnConnected listener) {
+        this.onConnectedListener = listener;
     }
 
     private boolean startServer(int tries) {
@@ -69,8 +76,15 @@ public class Server implements Runnable {
         Socket conn = null;
         try {
             conn = serverSocket.accept();
+            onConnected(conn);
             handle(conn);
         } catch (IOException ex) {
+        }
+    }
+
+    private void onConnected(Socket conn) {
+        if(onConnectedListener != null){
+            onConnectedListener.onConnected(conn);
         }
     }
 
