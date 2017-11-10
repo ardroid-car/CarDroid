@@ -27,7 +27,7 @@ public class ConnectToServer extends Thread {
         this.address = new InetSocketAddress(ip, port);
         this.callback = callback;
         this.running = true;
-        setName("Client-Connector");
+        setName("ClientOLD-Connector");
     }
 
     @Override

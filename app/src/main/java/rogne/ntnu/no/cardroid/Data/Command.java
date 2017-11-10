@@ -10,9 +10,11 @@ public class Command {
     public final static String BACKWARD = "b";
     public final static String TURN_LEFT = "l";
     public final static String TURN_RIGHT = "r";
-    public final static String TURN_DOWN_FOR_WHAT = "lul";
+    public final static String CLAW = "claw";
     public final static int START = 1;
     public final static int STOP = 0;
+    public final static int CLAW_CLOSE = 100;
+    public final static int CLAW_OPEN = 150;
     private String command;
     private int value;
     private int startStop;
@@ -33,5 +35,12 @@ public class Command {
     @Override
     public String toString() {
         return "c=" + command + ":v=" + value + ":s=" + startStop;
+    }
+
+    public boolean isMoveDirection(){
+        return (command.equals(FORWARD) || command.equals(BACKWARD)) && startStop == START;
+    }
+    public boolean isStop(){
+        return command.equals(STOP_MOVING);
     }
 }

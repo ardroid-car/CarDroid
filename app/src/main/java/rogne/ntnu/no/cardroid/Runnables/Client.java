@@ -1,186 +1,23 @@
 package rogne.ntnu.no.cardroid.Runnables;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import rogne.ntnu.no.cardroid.Data.Command;
 
 /**
- * Created by Mikael on 13.10.2017.
+ * Created by Kristoffer on 2017-11-10.
  */
 
-public class Client implements Runnable {
+public class Client {
 
-    static String message = "test";
-    static String ip;
-    static int port;
-    Socket client;
-    PrintStream stream;
-    BufferedReader buffer;
-    Boolean send = false;
-    String sendMessage;
-    String input;
-    Command cmd = null;
-    static Boolean recieved = true;
-    String resend = "Test";
-    String lastInput;
+    private PrintWriter out;
 
-
-
-    public Client(String ip, int port) {
-        this.ip = ip;
-        this.port = port;
+    public Client(OutputStream out) {
+        this.out = new PrintWriter(out);
     }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        Client.message = message;
-    }
-
-
-    public void run() {
-
-
-        try {
-            System.out.println("Trying to connect");
-
-            client = new Socket(ip, port);  //connect to server
-
-            stream = new PrintStream(client.getOutputStream(), true);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("....");
-        if (client.isConnected()) {
-            System.out.println("Connected to:   " + ip + "     on Port: " + port);
-
-
-            System.out.println(message);
-            Thread th = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    String in;
-
-                    try {
-                        buffer = new BufferedReader(new InputStreamReader(client.getInputStream()));
-
-                        while (true) {
-
-
-                            System.out.println(buffer.toString());
-
-
-                            while ((in = buffer.readLine()) != null) {
-                                System.out.print("input is: ");
-                                System.out.println(in);
-                                lastInput = in;
-
-                            }
-
-                        }
-
-                    } catch (IOException e) {
-
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-            th.start();
-            while (client.isConnected()) {
-
-
-                if (client.isClosed()) {
-                    message = "closed";
-                }
-            }
-            // System.out.println("Connection lost");
-
-        }
-    }
-
-    public void sendMessage(String i) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Boolean re=true;
-                try {
-                    while (re) {
-                        stream.println(i);
-                        Thread.sleep(500);
-
-                        re=reSend(i);
-                    }
-                }catch(Exception e){
-                    System.out.println("Connection not established yet");
-                }
-
-
-            }
-
-        });
-        t.start();
-    }
-
-
-
-
-
-
-    public void send(String i) {
-            setMessage(i);
-            System.out.println("Message sent: " + i);
-            sendMessage(i);
-
-    }
-
-    public boolean reSend(String i) {
-
-        if(i.equals(lastInput)){
-            System.out.println("Lastinput is: " + lastInput);
-            return false;
-
-        }
-        else  {
-            System.out.println("Resent" + i);
-            return true;
-        }
-
-
-    }
-
-
-
-    public void setOutput(String i) {
-        input = i;
-
-    }
-
-
-    public void setCommand(Command cm) {
-        cmd = cm;
-        sendMessage = cmd.toString();
-        send = true;
-
-    }
-
-
-    public boolean isRecieved() {
-        return recieved;
+    public void sendCommand(Command command){
+        out.println(command);
     }
 }
-
-
-
-
-
-
-
-

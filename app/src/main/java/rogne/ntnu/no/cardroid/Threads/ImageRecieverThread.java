@@ -36,7 +36,7 @@ public class ImageRecieverThread extends Thread {
             in = socket.getInputStream();
             while (true) {
                 int length = getImageLength(in);
-                System.out.println("Client Recieved Length" + length);
+                System.out.println("ClientOLD Recieved Length" + length);
                 byte[] bytes = new byte[length];
                 while(in.available() < length){
                     System.out.println("Waiting for image");

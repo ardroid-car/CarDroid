@@ -15,8 +15,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
-        Intent client = new Intent(this, SimpleClientActivity.class);
+        setContentView(R.layout.activity_main);
+        Intent client = new Intent(this, ClientActivity.class);
         Intent server = new Intent(this, ServerActivity.class);
        Button phoneButton =(Button) findViewById(R.id.phoneButton);
        Button carButton= (Button) findViewById(R.id.carButton);

@@ -12,23 +12,23 @@ import android.widget.TextView;
 
 import java.io.PrintWriter;
 
-import rogne.ntnu.no.cardroid.Runnables.Client;
+import rogne.ntnu.no.cardroid.Runnables.ClientOLD;
 import rogne.ntnu.no.cardroid.Data.Command;
 import rogne.ntnu.no.cardroid.R;
 
-public class SimpleClientActivity extends Activity {
+public class OldClientActivity extends Activity {
 
 
     private PrintWriter printwriter;
     private TextView textField;
-    private Button buttonr;
-    private Button buttonf;
-    private Button buttonl;
-    private Button buttonb;
+    private Button rightButton;
+    private Button forwardButton;
+    private Button leftButton;
+    private Button backwardButton;
     private Button button;
     private Boolean connected = true;
     private Boolean sent = false;
-    private Client client;
+    private ClientOLD clientOLD;
     public String message = "TestMessage";
     private TextView textView;
     Thread t;
@@ -38,7 +38,6 @@ public class SimpleClientActivity extends Activity {
     // private PrintWriter stream;
     private String ip = "192.168.0.125";
     private int port = 6671;
-    String sentence = "Test";
 
 
     @Override
@@ -48,17 +47,17 @@ public class SimpleClientActivity extends Activity {
         StrictMode.setThreadPolicy(policy);*/
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-       speedBar =(SeekBar) findViewById(R.id.seekBar);
+        setContentView(R.layout.activity_client);
+       speedBar =(SeekBar) findViewById(R.id.activity_client_speed_Bar);
 
 
-        buttonr = (Button) findViewById(R.id.buttonr);   //reference to the send button
-        buttonf = (Button) findViewById(R.id.buttonf);
-        buttonb = (Button) findViewById(R.id.buttonb);
+        rightButton = (Button) findViewById(R.id.activity_client_right_button);   //reference to the send button
+        forwardButton = (Button) findViewById(R.id.activity_client_forward_button);
+        backwardButton = (Button) findViewById(R.id.activity_client_backwards_button);
         button = (Button) findViewById(R.id.button);
-        buttonl = (Button) findViewById(R.id.buttonl);
+        leftButton = (Button) findViewById(R.id.activity_client_left_button);
 
-        client = new Client(ip, port);
+        clientOLD = new ClientOLD(ip, port);
 
 
         textView = (TextView) findViewById(R.id.textView);
@@ -67,11 +66,9 @@ public class SimpleClientActivity extends Activity {
 
 
         speedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressChanged = 0;
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                progressChanged = progress;
-                speed=progressChanged;
+                speed = progress;
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -96,21 +93,21 @@ public class SimpleClientActivity extends Activity {
 
                 connected = false;
 
-                printView(client.getMessage());
+                printView(clientOLD.getMessage());
 
 
             }
         });
 
-        buttonf.setOnTouchListener(new View.OnTouchListener() {
+        forwardButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 Command forward;
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     forward=new Command(Command.FORWARD,speed,Command.START);
                     message =forward.toString();
-                    client.send(message);
-                    printView(client.getMessage());
+                    clientOLD.send(message);
+                    printView(clientOLD.getMessage());
 
 
 
@@ -121,11 +118,11 @@ public class SimpleClientActivity extends Activity {
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     forward=new Command(Command.FORWARD,speed,Command.STOP);
                     message = forward.toString();
-                    client.send(message);
-                    printView(client.getMessage());
+                    clientOLD.send(message);
+                    printView(clientOLD.getMessage());
 
 
-                    printView(client.getMessage());
+                    printView(clientOLD.getMessage());
 
                 }
 
@@ -136,23 +133,23 @@ public class SimpleClientActivity extends Activity {
             }
 
         });
-        buttonr.setOnTouchListener(new View.OnTouchListener() {
+        rightButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 Command right;
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                    right=new Command(Command.TURN_RIGHT,speed,Command.START);
                     message = right.toString();
-                    client.send(message);
-                    printView(client.getMessage());
+                    clientOLD.send(message);
+                    printView(clientOLD.getMessage());
 
 
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     right=new Command(Command.TURN_RIGHT,speed,Command.STOP);
                     message = right.toString();
-                    client.send(message);
-                    printView(client.getMessage());
+                    clientOLD.send(message);
+                    printView(clientOLD.getMessage());
 
                 }
 
@@ -163,23 +160,23 @@ public class SimpleClientActivity extends Activity {
             }
 
         });
-        buttonl.setOnTouchListener(new View.OnTouchListener() {
+        leftButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 Command left;
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     left=new Command(Command.TURN_LEFT,speed,Command.START);
                     message =left.toString();
-                    client.send(message);
-                    printView(client.getMessage());
+                    clientOLD.send(message);
+                    printView(clientOLD.getMessage());
 
 
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     left=new Command(Command.TURN_LEFT,speed,Command.STOP);
                     message =left.toString();
-                    client.send(message);
-                    printView(client.getMessage());
+                    clientOLD.send(message);
+                    printView(clientOLD.getMessage());
 
                 }
 
@@ -190,23 +187,23 @@ public class SimpleClientActivity extends Activity {
             }
 
         });
-        buttonb.setOnTouchListener(new View.OnTouchListener() {
+        backwardButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 Command back;
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                    back=new Command(Command.BACKWARD,speed,Command.START);
                     message =back.toString();
-                    client.send(message);
-                    printView(client.getMessage());;
+                    clientOLD.send(message);
+                    printView(clientOLD.getMessage());;
 
 
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     back=new Command(Command.BACKWARD,speed,Command.STOP);
                     message =back.toString();
-                    client.send(message);
-                    printView(client.getMessage());
+                    clientOLD.send(message);
+                    printView(clientOLD.getMessage());
                 }
 
                 //   printView(message);
@@ -233,11 +230,11 @@ public class SimpleClientActivity extends Activity {
 
     public void createConnection() {
 
-        //  (new Thread(client)).start();
+        //  (new Thread(clientOLD)).start();
         t = new Thread(new Runnable() {
             @Override
             public void run() {
-                client.run();
+                clientOLD.run();
 
             }
         });
@@ -251,7 +248,7 @@ public class SimpleClientActivity extends Activity {
         Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
-                client.send(me);
+                clientOLD.send(me);
 
             }
         });
