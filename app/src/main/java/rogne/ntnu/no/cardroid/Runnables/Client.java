@@ -47,21 +47,13 @@ public class Client extends Thread {
     }
 
     public void handle(String text, int speed) {
-         if (!isMoveDirection(text)) {
-            sendCommand(getCommand(text, speed));
-        } else if (isMoveDirection(text)) {
-            lastCommand = getCommand(text, speed);
-            sendCommand(lastCommand);
-        }
-    }
-
-    private boolean isMoveDirection(String text) {
-        return text.equals("forward") && text.equals("backward");
+        text = text.toLowerCase();
+        sendCommand(getCommand(text, speed));
     }
 
     private Command getCommand(String text, int speed) {
         Command cmd = null;
-        System.out.println(text.toLowerCase());
+        System.out.println(text);
         String[] str = text.toLowerCase().split(":");
         String cases = str[0];
         String action = str[1];
@@ -70,9 +62,11 @@ public class Client extends Thread {
                 switch (cases) {
                     case "forward":
                         cmd = new Command(Command.FORWARD, speed, Command.START);
+                        lastCommand = cmd;
                         break;
                     case "back":
                         cmd = new Command(Command.BACKWARD, speed, Command.START);
+                        lastCommand = cmd;
                         break;
                     case "left":
                         cmd = new Command(Command.TURN_LEFT, speed, Command.START);
@@ -83,10 +77,26 @@ public class Client extends Thread {
                     case "claw":
                         cmd = new Command(Command.CLAW, Command.CLAW_OPEN, Command.START);
                         break;
+                    default:
+                        cmd = new Command(Command.STOP_MOVING, 0, Command.STOP);
                 }
                 break;
             case "up":
                 switch (cases) {
+                    case "forward":
+                        cmd = new Command(Command.STOP_MOVING, 0, Command.STOP);
+                        lastCommand = cmd;
+                        break;
+                    case "back":
+                        cmd = new Command(Command.STOP_MOVING, 0, Command.STOP);
+                        lastCommand = cmd;
+                        break;
+                    case "left":
+                        cmd = lastCommand;
+                        break;
+                    case "right":
+                        cmd = lastCommand;
+                        break;
                     case "claw":
                         cmd = new Command(Command.CLAW, Command.CLAW_CLOSE, Command.START);
                         break;

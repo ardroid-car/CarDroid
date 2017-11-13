@@ -109,7 +109,7 @@ public class ClientActivity extends Activity {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     client.handle(buttonText+":down", speed);
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    client.handle(buttonText+":up", speed);
+                    client.handle(buttonText+":up", -1);
                 }
                 return true;
             }
