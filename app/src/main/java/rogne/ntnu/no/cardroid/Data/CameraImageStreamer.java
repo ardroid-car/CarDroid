@@ -86,8 +86,10 @@ public class CameraImageStreamer {
             int width = 640;
             int height = 480;
             if (jpegSizes != null && 0 < jpegSizes.length) {
-                width = jpegSizes[jpegSizes.length - 2].getWidth();
-                height = jpegSizes[jpegSizes.length - 2].getHeight();
+                width = jpegSizes[jpegSizes.length-3].getWidth();
+                height = jpegSizes[jpegSizes.length-3].getHeight();
+                System.out.println(width);
+                System.out.println(height);
             }
             ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.YUV_420_888, 2);
             List<Surface> outputSurfaces = new ArrayList<>(2);

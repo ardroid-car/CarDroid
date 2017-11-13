@@ -2,7 +2,10 @@ package rogne.ntnu.no.cardroid.Threads;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -14,7 +17,7 @@ import rogne.ntnu.no.cardroid.Utils.ByteUtils;
  * Created by krist on 2017-11-06.
  */
 
-public class ImageRecieverThread extends Thread {
+public class ImageReceiverThread extends Thread {
     private OnImageAvailable callback;
 
     public interface OnImageAvailable {
@@ -23,7 +26,7 @@ public class ImageRecieverThread extends Thread {
 
     private Socket socket;
 
-    public ImageRecieverThread(Socket socket) {
+    public ImageReceiverThread(Socket socket) {
         this.socket = socket;
     }
 
@@ -42,7 +45,7 @@ public class ImageRecieverThread extends Thread {
                 while(in.available() < length){
                 }
                 in.read(bytes);
-                Bitmap map = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                Bitmap map = getBitmap(bytes, length);
                 onImageAvailable(map);
             }
         } catch (IOException e) {
@@ -56,6 +59,17 @@ public class ImageRecieverThread extends Thread {
                 }
             }
         }
+    }
+
+    private Bitmap getBitmap(byte[] imageBytes, int length) {
+        Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes,0,length);
+        float cx = (float) imageBitmap.getWidth() / 2;
+        float cy = (float) imageBitmap.getHeight() / 2;
+        Matrix matrix = new Matrix();
+        matrix.setRotate(90, cx, cy);
+        matrix.postScale(1, -1, cx, cy);
+        imageBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
+        return imageBitmap;
     }
 
     private int getImageLength(InputStream in) throws IOException {

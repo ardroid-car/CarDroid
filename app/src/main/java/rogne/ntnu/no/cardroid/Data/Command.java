@@ -10,11 +10,11 @@ public class Command {
     public final static String BACKWARD = "b";
     public final static String TURN_LEFT = "l";
     public final static String TURN_RIGHT = "r";
-    public final static String CLAW = "claw";
+    public final static String CLAW = "k";
     public final static int START = 1;
     public final static int STOP = 0;
     public final static int CLAW_CLOSE = 100;
-    public final static int CLAW_OPEN = 150;
+    public final static int CLAW_OPEN = 142;
     private String command;
     private int value;
     private int startStop;

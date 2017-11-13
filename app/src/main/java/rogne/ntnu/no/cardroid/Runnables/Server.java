@@ -89,7 +89,7 @@ public class Server implements Runnable {
     }
 
     public void handle(Socket conn) {
-        String line, input = "";
+        String line = "";
         PrintStream out;
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -99,7 +99,6 @@ public class Server implements Runnable {
             running = true;
             while (running) {
                 line = in.readLine();
-                System.out.println(line);
                 handler.handle(line);
             }
             out.print("Server shutting down");

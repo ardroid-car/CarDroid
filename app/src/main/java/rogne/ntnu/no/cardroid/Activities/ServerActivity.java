@@ -82,8 +82,10 @@ public class ServerActivity extends AppCompatActivity {
                         output.write(ByteUtils.concat(ByteUtils.getSeperatorBytes(), dataLength, data));
                     } catch (IOException e) {
                         try {
-                            videoSocket.close();
-                            videoSocket = null;
+                            if(videoSocket != null) {
+                                videoSocket.close();
+                                videoSocket = null;
+                            }
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }

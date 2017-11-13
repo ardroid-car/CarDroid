@@ -17,13 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets {
-        main {
-            java {
-                exclude '**/Activities/OldClientActivity.java'
-            }
-        }
-    }
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8

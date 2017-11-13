@@ -50,8 +50,8 @@
 
 
         <activity android:name=".Activities.ServerActivity"/>
-        <activity android:name=".Activities.OldClientActivity" />
-        <activity android:name=".Activities.ClientActivity" />
+        <activity android:name=".Activities.ClientActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

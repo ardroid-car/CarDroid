@@ -14,7 +14,7 @@ import java.net.Socket;
 import rogne.ntnu.no.cardroid.R;
 import rogne.ntnu.no.cardroid.Runnables.Client;
 import rogne.ntnu.no.cardroid.Threads.ConnectToServer;
-import rogne.ntnu.no.cardroid.Threads.ImageRecieverThread;
+import rogne.ntnu.no.cardroid.Threads.ImageReceiverThread;
 
 /**
  * Created by Kristoffer on 2017-11-10.
@@ -36,6 +36,8 @@ public class ClientActivity extends Activity {
     private Socket command_socket;
     private Socket video_socket;
     private ImageView display;
+    private ImageReceiverThread fetcher;
+    private Button clawButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class ClientActivity extends Activity {
         setContentView(R.layout.activity_client);
         speedBar = findViewById(R.id.activity_client_speed_Bar);
         speedBar.setProgress(255);
+        speed = speedBar.getProgress();
         speedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -64,29 +67,38 @@ public class ClientActivity extends Activity {
         forwardButton = findViewById(R.id.activity_client_forward_button);
         backwardButton = findViewById(R.id.activity_client_backwards_button);
         leftButton = findViewById(R.id.activity_client_left_button);
+        clawButton = findViewById(R.id.activity_client_claw_button);
 
         setOnClickListeners();
-        if(client == null) {
-            commandConnector = new ConnectToServer(IP, COMMAND_PORT, socket -> {
-                try {
-                    client = new Client(socket.getOutputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-            commandConnector.start();
-        videoConnector = new ConnectToServer(IP, VIDEO_PORT, socket -> start(socket));
+        commandConnector = new ConnectToServer(IP, COMMAND_PORT, socket -> command_socket = socket);
+        commandConnector.start();
+        videoConnector = new ConnectToServer(IP, VIDEO_PORT, socket -> video_socket = socket);
         videoConnector.start();
-        }
-
+        new Thread(() -> {
+            while (video_socket == null || command_socket == null) {
+            }
+            runOnUiThread(this::start);
+        }).start();
 
     }
 
-    private void start(Socket socket) {
-        video_socket = socket;
-        ImageRecieverThread fetcher = new ImageRecieverThread(video_socket);
-        fetcher.setOnImageAvailableListener(bitmap -> runOnUiThread(() -> display.setImageBitmap(bitmap)));
-        fetcher.start();
+    private void start() {
+        try {
+            client = new Client(command_socket);
+            fetcher = new ImageReceiverThread(video_socket);
+            setFetcherListener();
+            fetcher.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setFetcherListener() {
+        if (fetcher != null) {
+            fetcher.setOnImageAvailableListener(bitmap -> runOnUiThread(() -> {
+                display.setImageBitmap(bitmap);
+            }));
+        }
     }
 
     private void setOnClickListeners() {
@@ -95,9 +107,9 @@ public class ClientActivity extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
                 String buttonText = ((Button) v).getText().toString();
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    client.handle(buttonText, speed);
+                    client.handle(buttonText+":down", speed);
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    client.handle(buttonText, -1);
+                    client.handle(buttonText+":up", speed);
                 }
                 return true;
             }
@@ -106,6 +118,6 @@ public class ClientActivity extends Activity {
         leftButton.setOnTouchListener(listener);
         forwardButton.setOnTouchListener(listener);
         backwardButton.setOnTouchListener(listener);
-
+        clawButton.setOnTouchListener(listener);
     }
 }
