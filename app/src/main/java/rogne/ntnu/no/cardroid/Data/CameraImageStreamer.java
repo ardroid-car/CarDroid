@@ -106,7 +106,7 @@ public class CameraImageStreamer {
                 public void onConfigured(CameraCaptureSession currentSession) {
                     try {
                         session = currentSession;
-                        session.setRepeatingRequest(captureBuilder.build(), null, mBackgroundHandler);
+                        session.capture(captureBuilder.build(), null, mBackgroundHandler);
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
                     }

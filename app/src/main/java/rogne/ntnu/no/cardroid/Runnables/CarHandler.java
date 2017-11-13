@@ -35,7 +35,9 @@ public class CarHandler implements Handler {
 
     @Override
     public void handle(String line) {
-        out.println(line);
+        if(out != null) {
+            out.println(line);
+        }
         onSend(line);
     }
 
@@ -45,6 +47,7 @@ public class CarHandler implements Handler {
     }
 
     public void onSend(String lineSent) {
+        System.out.println(lineSent);
         if (callback != null) {
             callback.onSend(lineSent);
         }

@@ -51,6 +51,7 @@
 
         <activity android:name=".Activities.ServerActivity"/>
         <activity android:name=".Activities.OldClientActivity" />
+        <activity android:name=".Activities.ClientActivity" />
     </application>
 
 </manifest>

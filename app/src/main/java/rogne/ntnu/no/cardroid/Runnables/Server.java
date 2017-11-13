@@ -99,6 +99,7 @@ public class Server implements Runnable {
             running = true;
             while (running) {
                 line = in.readLine();
+                System.out.println(line);
                 handler.handle(line);
             }
             out.print("Server shutting down");
@@ -118,7 +119,6 @@ public class Server implements Runnable {
             e.printStackTrace();
         }
     }
-
     public void send(String line){
         handler.handle(line);
     }

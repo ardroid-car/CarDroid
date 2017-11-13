@@ -39,13 +39,23 @@ public class ServerActivity extends AppCompatActivity {
         CommandBox box = new CommandBox(10);
         carServer = new Server(6670, new CarHandler(box));
         phoneServer = new Server(6671, new PhoneHandler(box));
+        Thread carThread = new Thread(carServer);
+        carThread.start();
+        Thread phoneThread = new Thread(phoneServer);
+        phoneThread.start();
         carServer.setOnConnectedListener(socket -> updateCarStatus(socket));
+        phoneServer.setOnConnectedListener(socket -> updatePhoneStatus(socket));
         listenForConnection();
+    }
+
+    private void updatePhoneStatus(Socket socket) {
+        this.phoneSocket = socket;
+        runOnUiThread(()-> phoneStatus.setText("Connected to: " + phoneSocket.getInetAddress()));
     }
 
     private void updateCarStatus(Socket socket) {
         this.carSocket = socket;
-        runOnUiThread(()-> ((TextView) findViewById(R.id.activity_server_car_status)).setText("Connected to: " + carSocket.getInetAddress()));
+        runOnUiThread(()-> carStatus.setText("Connected to: " + carSocket.getInetAddress()));
     }
 
     private void listenForConnection() {
