@@ -91,7 +91,7 @@ public class CameraImageStreamer {
                 System.out.println(width);
                 System.out.println(height);
             }
-            ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.YUV_420_888, 2);
+            ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.YUV_420_888, 10);
             List<Surface> outputSurfaces = new ArrayList<>(2);
             outputSurfaces.add(reader.getSurface());
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
@@ -108,7 +108,7 @@ public class CameraImageStreamer {
                 public void onConfigured(CameraCaptureSession currentSession) {
                     try {
                         session = currentSession;
-                        session.capture(captureBuilder.build(), null, mBackgroundHandler);
+                        session.setRepeatingRequest(captureBuilder.build(), null, mBackgroundHandler);
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
                     }

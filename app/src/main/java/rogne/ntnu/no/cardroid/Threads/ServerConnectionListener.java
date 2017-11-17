@@ -13,6 +13,7 @@ import java.net.Socket;
 public class ServerConnectionListener extends Thread {
     private final String TAG = "STREAMER";
     private boolean suppressed = false;
+    private boolean running = false;
 
     public interface OnSocketAvailable {
         void onSocketAvailable(Socket socket);
@@ -27,14 +28,17 @@ public class ServerConnectionListener extends Thread {
         this.port = port;
         this.listener = listener;
         setName("Server-Connector");
+        running = true;
     }
 
     @Override
     public void run() {
         try {
-            serverSocket = new ServerSocket(port);
-            Socket socket = serverSocket.accept();
-            onSocketAvailable(socket);
+            while(running) {
+                serverSocket = new ServerSocket(port);
+                Socket socket = serverSocket.accept();
+                onSocketAvailable(socket);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,6 +47,7 @@ public class ServerConnectionListener extends Thread {
 
     public void stopServer() {
         try {
+            running = false;
             serverSocket.close();
             Log.v(TAG, "Stopped listening for connections");
         } catch (IOException e) {

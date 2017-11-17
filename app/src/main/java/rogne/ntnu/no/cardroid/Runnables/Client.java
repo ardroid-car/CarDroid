@@ -19,6 +19,7 @@ public class Client extends Thread {
     private Socket socket;
     private boolean running = false;
     private Command command;
+    private boolean clawOpen = false;
 
     public Client(Socket socket) throws IOException {
         OutputStream out = socket.getOutputStream();
@@ -75,7 +76,13 @@ public class Client extends Thread {
                         cmd = new Command(Command.TURN_RIGHT, speed, Command.START);
                         break;
                     case "claw":
-                        cmd = new Command(Command.CLAW, Command.CLAW_OPEN, Command.START);
+                        if(clawOpen){
+                            cmd = new Command(Command.CLAW, Command.CLAW_CLOSE, Command.START);
+                            clawOpen = false;
+                        } else {
+                            cmd = new Command(Command.CLAW, Command.CLAW_OPEN, Command.START);
+                            clawOpen = true;
+                        }
                         break;
                     default:
                         cmd = new Command(Command.STOP_MOVING, 0, Command.STOP);
@@ -98,7 +105,6 @@ public class Client extends Thread {
                         cmd = lastCommand;
                         break;
                     case "claw":
-                        cmd = new Command(Command.CLAW, Command.CLAW_CLOSE, Command.START);
                         break;
                     default:
                         cmd = new Command(Command.STOP_MOVING, 0, Command.STOP);
