@@ -42,6 +42,7 @@ public class CameraImageStreamer {
     private final int FRONT_CAM = 1;
     private final int CAM_TO_USE = BACK_CAM;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+    private ImageReader reader;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -91,7 +92,7 @@ public class CameraImageStreamer {
                 System.out.println(width);
                 System.out.println(height);
             }
-            ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.YUV_420_888, 10);
+            reader = ImageReader.newInstance(width, height, ImageFormat.YUV_420_888, 10);
             List<Surface> outputSurfaces = new ArrayList<>(2);
             outputSurfaces.add(reader.getSurface());
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
