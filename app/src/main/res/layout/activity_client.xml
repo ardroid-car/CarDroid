@@ -4,9 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="rogne.ntnu.no.cardroid.Activities.OldClientActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp">
+
+    <Button
+        android:id="@+id/activity_client_claw_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="CLAW"
+        app:layout_constraintStart_toEndOf="@+id/activity_client_backwards_button"
+        app:layout_constraintTop_toBottomOf="@+id/activity_client_right_button" />
 
     <Button
         android:id="@+id/activity_client_right_button"
@@ -65,7 +74,7 @@
 
     <SeekBar
         android:id="@+id/activity_client_speed-Bar"
-        android:layout_width="309dp"
+        android:layout_width="0dp"
         android:layout_height="29dp"
         android:layout_marginBottom="8dp"
 
@@ -74,7 +83,7 @@
         android:max="255"
         android:rotation="0"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/activity_client_claw_button"
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.Guideline
