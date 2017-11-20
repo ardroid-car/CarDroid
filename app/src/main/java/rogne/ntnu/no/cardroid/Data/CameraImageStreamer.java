@@ -31,6 +31,7 @@ import java.util.List;
 
 /**
  * Created by krist on 2017-11-05.
+ * Helper class that handles everything that has to do with the camera. when an image has been captured, it is sent back through a callback.
  */
 
 public class CameraImageStreamer {

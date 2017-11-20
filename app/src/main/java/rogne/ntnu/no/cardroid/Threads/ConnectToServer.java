@@ -9,6 +9,7 @@ import java.net.Socket;
 
 /**
  * Created by krist on 2017-11-05.
+ * A thread that tries to connect to the given ip and port. Retries every 1000ms if it could not connect. When a connection is made, it sends the now connected socket back through a callback.
  */
 
 public class ConnectToServer extends Thread {

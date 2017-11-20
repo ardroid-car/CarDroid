@@ -4,6 +4,7 @@ import java.io.PrintStream;
 
 /**
  * Created by Mikael on 03.11.2017.
+ * Common interface for the phone and car handler classes.
  */
 
 public interface Handler {

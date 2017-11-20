@@ -54,7 +54,6 @@ public class Client extends Thread {
 
     private Command getCommand(String text, int speed) {
         Command cmd = null;
-        System.out.println(text);
         String[] str = text.toLowerCase().split(":");
         String cases = str[0];
         String action = str[1];

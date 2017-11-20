@@ -6,6 +6,7 @@ import rogne.ntnu.no.cardroid.Data.Command;
 
 /**
  * Created by Mikael on 03.11.2017.
+ * Handles communication with the controller phone.
  */
 
 public class PhoneHandler implements Handler{

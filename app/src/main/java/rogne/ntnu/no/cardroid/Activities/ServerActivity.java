@@ -58,11 +58,18 @@ public class ServerActivity extends AppCompatActivity {
         runOnUiThread(()-> carStatus.setText("Connected to: " + carSocket.getInetAddress()));
     }
 
+    /**
+     * Sets up a worker thread that waits for a connection on the image port.
+     */
     private void listenForConnection() {
         mainServer = new ServerConnectionListener(6672, this::perpareToStream);
         mainServer.start();
     }
 
+    /**
+     * Peraperes everything needed to start streaming images and recieving commands.
+     * @param socket the socket that was connected to the video stream.
+     */
     private void perpareToStream(Socket socket) {
         this.videoSocket = socket;
         runOnUiThread(() -> phoneStatus.setText("Connected to: " + socket.getInetAddress()));
@@ -71,6 +78,9 @@ public class ServerActivity extends AppCompatActivity {
         runOnUiThread(()->startStream());
     }
 
+    /**
+     * starts the stream and command recieving.
+     */
     private void startStream() {
         if (videoSocket != null) {
             try {

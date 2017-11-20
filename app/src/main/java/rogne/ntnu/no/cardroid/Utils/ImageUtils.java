@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 
 /**
  * class found on StackOverflow: https://stackoverflow.com/questions/44022062/converting-yuv-420-888-to-jpeg-and-saving-file-results-distorted-image
+ * Converts androids raw format to a jpeg.
  */
 
 public final class ImageUtils {

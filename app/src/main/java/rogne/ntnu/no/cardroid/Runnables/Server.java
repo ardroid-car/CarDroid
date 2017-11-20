@@ -11,6 +11,7 @@ import java.net.Socket;
 
 /**
  * Created by Kristoffer on 2017-09-28.
+ * Server object that holds a handler which the input is sent to.
  */
 
 public class Server implements Runnable {
@@ -60,6 +61,11 @@ public class Server implements Runnable {
         this.onConnectedListener = listener;
     }
 
+    /**
+     * starts the server.
+     * @param tries the number of tries to try and create a serversocket.
+     * @return true if creation was successful, false if not.
+     */
     private boolean startServer(int tries) {
         try {
             serverSocket = new ServerSocket(port, 10);
@@ -72,6 +78,9 @@ public class Server implements Runnable {
         }
     }
 
+    /**
+     * listens for a connection on the port.
+     */
     private void listenForConnection() {
         Socket conn = null;
         try {
@@ -88,6 +97,10 @@ public class Server implements Runnable {
         }
     }
 
+    /**
+     * Handles input and output.
+     * @param conn the socket to read from.
+     */
     public void handle(Socket conn) {
         String line = "";
         PrintStream out;

@@ -2,6 +2,7 @@ package rogne.ntnu.no.cardroid.Data;
 
 /**
  * Created by Kristoffer on 2017-09-29.
+ * Command object that represents the commands a user can give the car. Can parse stringified versions of itsself.
  */
 
 public class Command {

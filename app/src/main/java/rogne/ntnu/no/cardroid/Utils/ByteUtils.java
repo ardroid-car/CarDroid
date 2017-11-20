@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 /**
  * Created by Kristoffer on 2017-11-10.
+ * Helper class to have a commonplace about handling bytes.
  */
 
 public class ByteUtils {

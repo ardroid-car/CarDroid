@@ -69,7 +69,6 @@ public class ClientActivity extends Activity {
         leftButton = findViewById(R.id.activity_client_left_button);
         clawButton = findViewById(R.id.activity_client_claw_button);
 
-        setOnClickListeners();
         commandConnector = new ConnectToServer(IP, COMMAND_PORT, socket -> command_socket = socket);
         commandConnector.start();
         videoConnector = new ConnectToServer(IP, VIDEO_PORT, socket -> video_socket = socket);
@@ -77,12 +76,16 @@ public class ClientActivity extends Activity {
         new Thread(() -> {
             while (video_socket == null || command_socket == null) {
             }
-            runOnUiThread(this::start);
+            runOnUiThread(this::beginController);
         }).start();
 
     }
 
-    private void start() {
+    /**
+     * Sets up the controller and image steam.
+     */
+    private void beginController() {
+        setOnClickListeners();
         try {
             client = new Client(command_socket);
             fetcher = new ImageReceiverThread(video_socket);
@@ -93,6 +96,9 @@ public class ClientActivity extends Activity {
         }
     }
 
+    /**
+     * sets the listener for what to do when an image has been recieved
+     */
     private void setFetcherListener() {
         if (fetcher != null) {
             fetcher.setOnImageAvailableListener(bitmap -> runOnUiThread(() -> {
@@ -101,6 +107,9 @@ public class ClientActivity extends Activity {
         }
     }
 
+    /**
+     * sets all the clicklisteners for the controll buttons
+     */
     private void setOnClickListeners() {
         View.OnTouchListener listener = new View.OnTouchListener() {
             @Override

@@ -4,6 +4,7 @@ import java.io.PrintStream;
 
 /**
  * Created by Mikael on 03.11.2017.
+ * Handles communication with the car.
  */
 
 public class CarHandler implements Handler {

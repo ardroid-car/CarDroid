@@ -8,6 +8,7 @@ import java.net.Socket;
 
 /**
  * Created by krist on 2017-11-05.
+ * A thread that waits for incoming connections. when a connection is made it sends the now connected socket back through a callback.
  */
 
 public class ServerConnectionListener extends Thread {

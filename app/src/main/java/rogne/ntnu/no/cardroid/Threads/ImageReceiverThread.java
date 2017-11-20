@@ -15,6 +15,7 @@ import rogne.ntnu.no.cardroid.Utils.ByteUtils;
 
 /**
  * Created by krist on 2017-11-06.
+ * Thread that waits for an complete image to be recieved and then sends it up using a callback
  */
 
 public class ImageReceiverThread extends Thread {
