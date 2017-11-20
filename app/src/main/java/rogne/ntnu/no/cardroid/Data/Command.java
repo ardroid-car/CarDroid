@@ -26,6 +26,10 @@ public class Command {
         this.startStop = startStop;
     }
 
+    /**
+     * Decomplies a string version of a command object.
+     * @param string the string version of the command object
+     */
     public Command(String string) {
         String str[] = string.split(":");
         this.command = str[0].substring(2);
